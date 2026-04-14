@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import {MenuIcon} from 'lucide-react'
+import { UserProfile } from "@clerk/nextjs";
 
 type Props = {};
 
@@ -57,6 +58,7 @@ const Navbar = async (props: Props) => {
         </Link>
         {//WIP:wire up user
         }
+        <UserProfile/>
         <MenuIcon className="md:hidden"/>
       </aside>
     </header>
