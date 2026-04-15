@@ -58,7 +58,7 @@ const Navbar = async (props: Props) => {
         </Link>
         {//WIP:wire up user
         }
-        <UserProfile/>
+        {/* <UserProfile/> */}
         <MenuIcon className="md:hidden"/>
       </aside>
     </header>

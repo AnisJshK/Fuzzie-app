@@ -5,7 +5,7 @@ import { FileUploaderRegular } from '@uploadcare/react-uploader/next'
 import '@uploadcare/react-uploader/core.css'
 
 type Props = {
-  onUpload: (file: string) => Promise<unknown>
+  onUpload: (e: string) => Promise<unknown>
 }
 
 const UploadCareButton = ({ onUpload }: Props) => {
