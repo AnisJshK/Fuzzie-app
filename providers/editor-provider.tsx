@@ -96,8 +96,65 @@ const editorReducer=(
                 return undoState
             }
             return state
+
+        case 'LOAD_DATA':
+            return {
+                ...state,
+                editor : {
+                    ...state.editor,
+                    elements:action.payload.elements || initialEditorState.elements,
+                    edges:action.payload.edges,
+                },
+            }
+        case 'SELECTED_ELEMENT':
+            return {
+                ...state.editor,
+                editor :{
+                    ...state.editor,
+                    selectedNode:action.payload.element,
+                },
+            }
+
         default:
             return state
     }
 
 }
+
+export type EditorContextData = {
+    previewMode : boolean
+    setPreviewMode : (previewMode:boolean) =>void
+}
+
+export const EditorContext = createContext<{
+    state:EditorState
+    dispatch:Dispatch<EditorActions>
+}>({
+    state:initialState,
+    dispatch:()=>undefined,
+})
+
+type EditorProps = {
+    children:React.ReactNode
+}
+
+const EditorProvider = (props:EditorProps) => {
+    const [state,dispatch] = useReducer(editorReducer,initialState)
+    return (
+        <EditorContext.Provider value={{
+            state,dispatch
+        }}>
+        {props.children}
+        </EditorContext.Provider>
+    )
+}
+
+export const useEditor = () =>{
+    const context = useContext(EditorContext)
+    if(!context){
+        throw new Error('useEditor Hook must be used within the editor provider')
+    }
+    return context
+}
+
+export default EditorProvider
