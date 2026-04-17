@@ -37,13 +37,16 @@ const CustomModal = ({title,subheading,children,defaultOpen}:Props) => {
       <DrawerDescription className="text-center flex flex-col items-center gap-4 h-96
       overflow-scroll">
         {subheading}
-        {children}
+       
       </DrawerDescription>
     </DrawerHeader>
+    <div className="flex flex-col items-center gap-4 h-96 overflow-scroll p-4">
+    {children}
+  </div>
     <DrawerFooter className="flex flex-col gap-4 bg-background border-t-[1px]
     border-t-muted">
       <Button>Submit</Button>
-      <DrawerClose>
+      <DrawerClose asChild>
         <Button
         variant="ghost"
         className="w-full"

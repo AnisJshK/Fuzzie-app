@@ -1,8 +1,10 @@
+'use client'
 import { EditorNodeType } from "@/lib/types";
 import { useEditor } from "@/providers/editor-provider";
 import React, { useMemo } from "react";
 import ReactFlow from "reactflow";
 import "reactflow/dist/style.css";
+import EditorCanvasCardSingle from "./editor-canvas-card-single";
 
 type Props = {};
 
