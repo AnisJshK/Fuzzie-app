@@ -1,6 +1,7 @@
 import { CONNECTIONS } from '@/lib/constant'
 import React from 'react'
 import ConnectionCard from './_components/connection-card'
+// import ConnectionCard from './_components/connection-card'
 
 type Props = {
     searchParams?:{[key:string]:string|undefined}

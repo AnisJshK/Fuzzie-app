@@ -19,7 +19,7 @@ type Props = {
 
 const Workflow = ({ name, description, id, publish }: Props) => {
   //Challenge
-  //WIP:Wire up Db
+  //WIP:Wire up Db 
   return (
     <Card className="flex w-full items-center justify-between">
       <CardHeader className="flex flex-col gap-4">
