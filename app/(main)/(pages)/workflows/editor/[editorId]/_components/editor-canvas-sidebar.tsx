@@ -7,7 +7,11 @@ import { Separator } from '@/components/ui/separator'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import EditorCanvasIconHelper from './editor-canvas-icon-helper'
 import { onDragStart } from '@/lib/editor-utils'
-import { EditorCanvasDefaultCardTypes } from '@/lib/constant'
+import { CONNECTIONS, EditorCanvasDefaultCardTypes } from '@/lib/constant'
+import { Accordion } from 'radix-ui'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { connection } from 'next/server'
+import RendorConnectionAccordion from './rendor-connectoin-accordion'
 
 type Props = {
     nodes:EditorNodeType[]
@@ -54,6 +58,31 @@ const EditorCanvasSidebar = ({nodes}: Props) => {
                 </CardHeader>
               </Card>
             ))}
+            </TabsContent>
+            <TabsContent value='settings'
+            className='-mt-6'>
+                <div className='px-2 py-4 text-center text-xl font-bold'>
+                    {state.editor.selectedNode.data.title}
+                </div>
+                <Accordion type="multiple">
+                    <AccordionItem 
+                    value='Options'
+                    className='border-y-[1px] px-2'
+                    >
+                        <AccordionTrigger className='!no-underline'>
+                            Account
+                        </AccordionTrigger>
+                        <AccordionContent>
+                           {CONNECTIONS.map((connection)=>(
+                            <RendorConnectionAccordion
+                            key={connection.title}
+                            state={state}
+                            connection ={connection}
+                            />
+                           ))}
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             </TabsContent>
         </Tabs>
     </aside>
