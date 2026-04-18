@@ -7,9 +7,10 @@ import {
   GitBranch,
   HardDrive,
   Mail,
+  MessageSquare,
   MousePointerClickIcon,
   Plus,
-  Slack,
+  
   Timer,
   Webhook,
   Zap,
@@ -43,7 +44,7 @@ const EditorCanvasIconHelper = ({ type }: Props) => {
       )
     case 'Slack':
       return (
-        <Slack
+        <MessageSquare
           className="flex-shrink-0"
           size={30}
         />

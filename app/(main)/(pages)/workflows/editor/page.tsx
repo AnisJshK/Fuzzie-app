@@ -5,7 +5,7 @@ type Props = {}
 const Page = (props: Props) => {
     //Challenge
   return (
-    <div>Page</div>
+    <div>Editor Window</div>
   )
 }
 

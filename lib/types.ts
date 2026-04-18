@@ -32,7 +32,7 @@ export type EditorCanvasTypes =
   | "Google Drive"
   | "Notion"
   | "Custom Webhook"
-  | "Google Calender"
+  | "Google Calendar"
   | "Trigger"
   | "Action"
   | "Wait";
