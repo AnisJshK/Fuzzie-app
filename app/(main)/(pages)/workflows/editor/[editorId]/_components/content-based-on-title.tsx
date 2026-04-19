@@ -44,8 +44,8 @@ const ContentBasedOnTitle = ({
   selectedSlackChannels,
   setSelectedSlackChannels,
 }: Props) => {
-  const { seletedNode } = newState.editor;
-  const title = seletedNode.data.title;
+  const { selectedNode } = newState.editor;
+  const title = selectedNode.data.title;
   //@ts-ignore
   const nodeConnectionType: any = nodeConnection[nodeMapper[title]];
 
