@@ -1,17 +1,18 @@
 import { EditorCanvasTypes, EditorNodeType } from '@/lib/types'
 import { useNodeConnections } from '@/providers/connection-provider'
 import { useEditor } from '@/providers/editor-provider'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from '@/components/ui/separator'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import EditorCanvasIconHelper from './editor-canvas-icon-helper'
-import { onDragStart } from '@/lib/editor-utils'
+import { onConnections, onDragStart } from '@/lib/editor-utils'
 import { CONNECTIONS, EditorCanvasDefaultCardTypes } from '@/lib/constant'
-import { Accordion } from 'radix-ui'
-import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Accordion,AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { connection } from 'next/server'
 import RendorConnectionAccordion from './rendor-connectoin-accordion'
+import { useFuzzieStore } from '@/store'
+import RenderOutputAccordion from './render-output-accordion'
 
 type Props = {
     nodes:EditorNodeType[]
@@ -20,6 +21,13 @@ type Props = {
 const EditorCanvasSidebar = ({nodes}: Props) => {
     const {state} = useEditor()
     const {nodeConnection} = useNodeConnections()
+    const {googleFile,setSlackChannels} = useFuzzieStore()
+
+    useEffect(()=>{
+      if(state){
+        onConnections(nodeConnection,state,googleFile)
+      }
+    },[state])
   return (
     <aside>
         <Tabs defaultValue='actions' className='h-screen
@@ -64,7 +72,8 @@ const EditorCanvasSidebar = ({nodes}: Props) => {
                 <div className='px-2 py-4 text-center text-xl font-bold'>
                     {state.editor.selectedNode.data.title}
                 </div>
-                <Accordion type="multiple">
+                <Accordion type="multiple"
+                >
                     <AccordionItem 
                     value='Options'
                     className='border-y-[1px] px-2'
@@ -81,6 +90,18 @@ const EditorCanvasSidebar = ({nodes}: Props) => {
                             />
                            ))}
                         </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem 
+                    value='Expected Output'
+                    className='px-2'
+                    >
+                        <AccordionTrigger className='!no-underline'>
+                            Action
+                        </AccordionTrigger>
+                        <RenderOutputAccordion
+                        state={state}
+                        nodeConnection = {nodeConnection}
+                        />
                     </AccordionItem>
                 </Accordion>
             </TabsContent>
