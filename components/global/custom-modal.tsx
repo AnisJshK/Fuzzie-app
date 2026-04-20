@@ -30,17 +30,17 @@ const CustomModal = ({title,subheading,children,defaultOpen}:Props) => {
     open={isOpen}
     onClose={handleClose}
     >
-  <DrawerTrigger>Open</DrawerTrigger>
+ 
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle className="text-center">{title}</DrawerTitle>
-      <DrawerDescription className="text-center flex flex-col items-center gap-4 h-96
+      <DrawerDescription className="text-center flex flex-col items-center gap-4 
       overflow-scroll">
         {subheading}
        
       </DrawerDescription>
     </DrawerHeader>
-    <div className="flex flex-col items-center gap-4 h-96 overflow-scroll p-4">
+    <div className="flex flex-col items-center gap-4 overflow-scroll p-4">
     {children}
   </div>
     <DrawerFooter className="flex flex-col gap-4 bg-background border-t-[1px]

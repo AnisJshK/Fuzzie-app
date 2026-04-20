@@ -17,10 +17,7 @@ const Page = () => {
         <WorkflowButton />
       </h1>
       <Workflows />
-      <Workflows />
-      <Workflows />
-      <Workflows />
-      <Workflows />
+      
       
     </div>
   );

@@ -9,12 +9,13 @@ import { onSlackConnect } from './_actions/slack-connection'
 import { getUserData } from './_actions/get-user'
 
 type Props = {
-    searchParams?:{[key:string]:string|undefined}
+    searchParams?:Promise<{[key:string]:string|undefined}>
 }
 
 //WIP :Connections to be completed
 
 const Connections =async (props: Props) => {
+  const searchParams = await props.searchParams
     const {
     webhook_id,
     webhook_name,
@@ -34,7 +35,7 @@ const Connections =async (props: Props) => {
     bot_user_id,
     team_id,
     team_name,
-  } = props.searchParams ?? {
+  } = searchParams ?? {
     webhook_id: '',
     webhook_name: '',
     webhook_url: '',
@@ -130,7 +131,6 @@ const Connections =async (props: Props) => {
                   />
                 ))}
             </section>
-
         </div>
     </div>
   )

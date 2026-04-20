@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { Form, useForm } from 'react-hook-form'
 import {z} from 'zod'
-import { Card } from '../global/container-scroll-animation'
-import { CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+// import { Card } from '../global/container-scroll-animation'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useModal } from '@/providers/modal-provider'
+import { onCreateWorkflow } from '@/app/(main)/(pages)/workflows/_actions/workflow-connections'
 
 type Props = {
     title?:string
@@ -18,6 +21,7 @@ type Props = {
 }
 
 const WorkflowForm = ({title,subTitle}: Props) => {
+    const {setClose} = useModal()
     const form = useForm<z.infer<typeof WorkflowFormSchema>>({
         mode:'onChange',
         resolver:zodResolver(WorkflowFormSchema),
@@ -30,15 +34,15 @@ const WorkflowForm = ({title,subTitle}: Props) => {
     const router = useRouter()
 
     const handleSubmit = async(values:z.infer<typeof WorkflowFormSchema>)=>{
-        // const workflow = await onCreateWorkflow(values.name,values.description)
-        // if(workflow){
-        //     toast.message(workflow.message)
-        //     router.refresh()
-        // }
-        // setClose()
+        const workflow = await onCreateWorkflow(values.name,values.description)
+        if(workflow){
+            toast.message(workflow.message)
+            router.refresh()
+        }
+        setClose()
     }
   return (
-    <Card className="w-full max-w-[650px] border-none" >
+    <Card className="w-full h-max border-none flex flex-col-reverse" >
         {title && subTitle && (
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
@@ -47,7 +51,7 @@ const WorkflowForm = ({title,subTitle}: Props) => {
         )}
         <CardContent>
             <form onSubmit={form.handleSubmit(handleSubmit)}
-            className='flex flex-col gap-4 text-left'
+            className='flex flex-col gap-4 text-left m-2 p-4 '
             >
                 <FieldGroup>
                     <Field
@@ -80,7 +84,7 @@ const WorkflowForm = ({title,subTitle}: Props) => {
                 <Button className='mt-4' disabled={isLoading} type='submit'>
                     {isLoading ? (
                         <>
-                        <Loader2 className='mr-2 h-4 2-4 animate-spin'/> Saving
+                        <Loader2 className='mr-2 h-4 w-4 animate-spin'/> Saving
                         </>
                     ):(
                         'Save Settings'
