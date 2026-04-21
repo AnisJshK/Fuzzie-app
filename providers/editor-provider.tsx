@@ -67,7 +67,7 @@ const editorReducer=(
     switch(action.type){
         case 'REDO':
             if(state.history.currentIndex < state.history.history.length-1){
-                const nextIndex = state.history.currentIndex-1
+                const nextIndex = state.history.currentIndex+1
                 const nextEditorState = {...state.history.history[nextIndex]}
                 const redoState = {
                     ...state,
@@ -108,7 +108,7 @@ const editorReducer=(
             }
         case 'SELECTED_ELEMENT':
             return {
-                ...state.editor,
+                ...state,
                 editor :{
                     ...state.editor,
                     selectedNode:action.payload.element,

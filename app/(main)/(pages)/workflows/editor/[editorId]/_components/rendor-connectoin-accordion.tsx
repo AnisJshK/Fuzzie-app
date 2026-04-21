@@ -34,7 +34,7 @@ const RendorConnectionAccordion = ({connection,state}: {
     )
   return (
     <AccordionContent key={title}>
-      {state.editor.selectedNode.data.title === title && (
+      { (
         <>
           <ConnectionCard
             title={title}

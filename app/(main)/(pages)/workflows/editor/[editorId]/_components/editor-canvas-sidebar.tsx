@@ -1,60 +1,81 @@
-import { EditorCanvasTypes, EditorNodeType } from '@/lib/types'
-import { useNodeConnections } from '@/providers/connection-provider'
-import { useEditor } from '@/providers/editor-provider'
-import React, { useEffect } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Separator } from '@/components/ui/separator'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import EditorCanvasIconHelper from './editor-canvas-icon-helper'
-import { fetchBotSlackChannels, onConnections, onDragStart } from '@/lib/editor-utils'
-import { CONNECTIONS, EditorCanvasDefaultCardTypes } from '@/lib/constant'
-import { Accordion,AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { connection } from 'next/server'
-import RendorConnectionAccordion from './rendor-connectoin-accordion'
-import { useFuzzieStore } from '@/store'
-import RenderOutputAccordion from './render-output-accordion'
+import { EditorCanvasTypes, EditorNodeType } from "@/lib/types";
+import { useNodeConnections } from "@/providers/connection-provider";
+import { useEditor } from "@/providers/editor-provider";
+import React, { useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import EditorCanvasIconHelper from "./editor-canvas-icon-helper";
+import {
+  fetchBotSlackChannels,
+  onConnections,
+  onDragStart,
+} from "@/lib/editor-utils";
+import { CONNECTIONS, EditorCanvasDefaultCardTypes } from "@/lib/constant";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { connection } from "next/server";
+import RendorConnectionAccordion from "./rendor-connectoin-accordion";
+import { useFuzzieStore } from "@/store";
+import RenderOutputAccordion from "./render-output-accordion";
 
 type Props = {
-    nodes:EditorNodeType[]
-}
+  nodes: EditorNodeType[];
+};
 
-const EditorCanvasSidebar = ({nodes}: Props) => {
-    const {state} = useEditor()
-    const {nodeConnection} = useNodeConnections()
-    const {googleFile,setSlackChannels} = useFuzzieStore()
+const EditorCanvasSidebar = ({ nodes }: Props) => {
+  const { state } = useEditor();
+  const { nodeConnection } = useNodeConnections();
+  const { googleFile, setSlackChannels } = useFuzzieStore();
 
-    useEffect(()=>{
-      if(state){
-        onConnections(nodeConnection,state,googleFile)
-      }
-    },[state])
-    useEffect(()=>{
-      if(nodeConnection.slackNode.slackAccessToken){
-        fetchBotSlackChannels(
-          nodeConnection.slackNode.slackAccessToken,
-          setSlackChannels
-        )
-      }
-    },[nodeConnection])
+  console.log("SELECTED NODE:", state.editor.selectedNode)
+console.log("NODE TITLE:", state.editor.selectedNode?.data?.title)
+console.log("NODE TYPE:", state.editor.selectedNode?.data?.type)
+console.log("CONNECTION TITLES:", CONNECTIONS.map(c => c.title))
+console.log("CONNECTION TYPES:", CONNECTIONS.map(c => c.type))
+
+  // useEffect(() => {
+  //   if (state) {
+  //     onConnections(nodeConnection, state, googleFile);
+  //   }
+  // }, [state]);
+  useEffect(() => {
+    if (nodeConnection.slackNode.slackAccessToken) {
+      fetchBotSlackChannels(
+        nodeConnection.slackNode.slackAccessToken,
+        setSlackChannels,
+      );
+    }
+    console.log("SELECTED NODE:", state.editor.selectedNode);
+  }, [nodeConnection]);
+
   return (
     <aside>
-        <Tabs defaultValue='actions' className='h-screen
-        overflow-scroll pb-24'>
-            <TabsList
-            className='bg-transparent'>
-                <TabsTrigger value='actions'>Actions</TabsTrigger>
-                <TabsTrigger value='settings'>Settings</TabsTrigger>
-            </TabsList>
-            <Separator/>
-            <TabsContent 
-            value='actions'
-            className='flex flex-col gap-4 p-4'
-            >
-                {Object.entries(EditorCanvasDefaultCardTypes)
+      <Tabs
+        defaultValue="actions"
+        className="h-screen
+        overflow-scroll pb-24"
+      >
+        <TabsList className="bg-transparent">
+          <TabsTrigger value="actions">Actions</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </TabsList>
+        <Separator />
+        <TabsContent value="actions" className="flex flex-col gap-4 p-4">
+          {Object.entries(EditorCanvasDefaultCardTypes)
             .filter(
               ([_, cardType]) =>
-                (!nodes.length && cardType.type === 'Trigger') ||
-                (nodes.length && cardType.type === 'Action')
+                (!nodes.length && cardType.type === "Trigger") ||
+                (nodes.length && cardType.type === "Action"),
             )
             .map(([cardKey, cardValue]) => (
               <Card
@@ -74,48 +95,43 @@ const EditorCanvasSidebar = ({nodes}: Props) => {
                 </CardHeader>
               </Card>
             ))}
-            </TabsContent>
-            <TabsContent value='settings'
-            className='-mt-6'>
-                <div className='px-2 py-4 text-center text-xl font-bold'>
-                    {state.editor.selectedNode.data.title}
-                </div>
-                <Accordion type="multiple"
-                >
-                    <AccordionItem 
-                    value='Options'
-                    className='border-y-[1px] px-2'
-                    >
-                        <AccordionTrigger className='!no-underline'>
-                            Account
-                        </AccordionTrigger>
-                        <AccordionContent>
-                           {CONNECTIONS.map((connection)=>(
-                            <RendorConnectionAccordion
-                            key={connection.title}
-                            state={state}
-                            connection ={connection}
-                            />
-                           ))}
-                        </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem 
-                    value='Expected Output'
-                    className='px-2'
-                    >
-                        <AccordionTrigger className='!no-underline'>
-                            Action
-                        </AccordionTrigger>
-                        <RenderOutputAccordion
-                        state={state}
-                        nodeConnection = {nodeConnection}
-                        />
-                    </AccordionItem>
-                </Accordion>
-            </TabsContent>
-        </Tabs>
+        </TabsContent>
+        <TabsContent value="settings" className="-mt-6">
+          <div className="px-2 py-4 text-center text-xl font-bold">
+            {state.editor.selectedNode.data.title}
+          </div>
+          <Accordion type="multiple">
+            <AccordionItem value="Options" className="border-y-[1px] px-2">
+              <AccordionTrigger className="!no-underline">
+                Account
+              </AccordionTrigger>
+              <AccordionContent>
+                {CONNECTIONS.filter(
+                  (connection) =>
+                    connection.title === state.editor.selectedNode?.data?.title,
+                ).map((connection) => (
+                  <RendorConnectionAccordion
+                    key={connection.title}
+                    state={state}
+                    connection={connection}
+                  />
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="Expected Output" className="px-2">
+              <AccordionTrigger className="!no-underline">
+                Action
+              </AccordionTrigger>
+              <RenderOutputAccordion
+                state={state}
+                nodeConnection={nodeConnection}
+              />
+            </AccordionItem>
+          </Accordion>
+        </TabsContent>
+      </Tabs>
     </aside>
-  )
-}
+  );
+};
 
-export default EditorCanvasSidebar
+export default EditorCanvasSidebar;

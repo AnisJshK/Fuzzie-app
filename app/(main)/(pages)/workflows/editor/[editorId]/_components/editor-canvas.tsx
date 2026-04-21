@@ -4,6 +4,7 @@ import { useEditor } from "@/providers/editor-provider";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   addEdge,
+  EdgeChange,
   applyEdgeChanges,
   applyNodeChanges,
   Background,
@@ -127,12 +128,10 @@ const EditorCanvas = (props: Props) => {
       //@ts-ignore
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, state],
+    [reactFlowInstance, state.editor.elements],
   );
 
-  useEffect(()=>{
-    dispatch({type:'LOAD_DATA',payload:{edges,elements:nodes}})
-  },[nodes,edges])
+ 
 
   const nodeTypes = useMemo(
     () => ({
@@ -183,7 +182,7 @@ const EditorCanvas = (props: Props) => {
               className="w-[300px]"
               onDrop={onDrop}
               onDragOver={onDragOver}
-              nodes={state.editor.elements}
+              nodes={nodes}
               onNodesChange={onNodesChange}
               edges={edges}
               onEdgesChange={onEdgesChange}
