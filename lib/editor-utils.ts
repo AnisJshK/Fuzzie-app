@@ -117,7 +117,7 @@ export const onConnections =async(
             }
         }   
     }
-    if(editorState.editor.selectedNode.data.title = "Slack"){
+    if(editorState.editor.selectedNode.data.title === "Slack"){
         const connection = await getSlackConnection()
         if(connection){
             nodeConnection.setSlackNode({

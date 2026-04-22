@@ -43,11 +43,11 @@ console.log("NODE TYPE:", state.editor.selectedNode?.data?.type)
 console.log("CONNECTION TITLES:", CONNECTIONS.map(c => c.title))
 console.log("CONNECTION TYPES:", CONNECTIONS.map(c => c.type))
 
-  // useEffect(() => {
-  //   if (state) {
-  //     onConnections(nodeConnection, state, googleFile);
-  //   }
-  // }, [state]);
+  useEffect(() => {
+    if (state.editor.selectedNode) {
+      onConnections(nodeConnection, state, googleFile);
+    }
+  }, [state]);
   useEffect(() => {
     if (nodeConnection.slackNode.slackAccessToken) {
       fetchBotSlackChannels(
