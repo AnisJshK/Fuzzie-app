@@ -1,10 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
-    domains: ["1la2o18zak.ucarecd.net"],
-  }
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '1la2o18zak.ucarecd.net',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

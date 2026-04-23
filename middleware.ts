@@ -1,7 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 const isPublicRoute = createRouteMatcher([
   '/',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
   '/api/clerk-webhook',
   '/api/drive-activity/notification',
 ])
@@ -15,8 +18,22 @@ const isIgnoredRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isIgnoredRoute(req)) return
-  if (!isPublicRoute(req)) await auth.protect()
+  if (isIgnoredRoute(req)) return NextResponse.next()
+  if (!isPublicRoute(req)) {
+    const {userId} = await auth()
+
+    if(!userId){
+      const isApiRoute = req.nextUrl.pathname.startsWith('/api')
+      if(isApiRoute){
+        return NextResponse.json({
+          error:'Unauthorized'
+        },{
+          status:401
+        })
+      }
+      await auth.protect()
+    }
+  }
 })
 
 export const config = {
