@@ -36,6 +36,7 @@ const ActionButton = ({
         ...prev,
         content:'',
       }))
+
     }
   },[currentService,nodeConnection])
 
@@ -145,7 +146,7 @@ const ActionButton = ({
           variant={'outline'}
           onClick={onStoreNotionContent}
           >
-            Discord
+            Notion
           </Button>
           <Button
             onClick={onCreateLocalNodeTemplate}
@@ -163,7 +164,7 @@ const ActionButton = ({
           variant={'outline'}
           onClick={onStoreSlackContent}
           >
-            Discord
+            Slack
           </Button>
           <Button
             onClick={onCreateLocalNodeTemplate}
