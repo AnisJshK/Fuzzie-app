@@ -15,13 +15,13 @@ export async function GET() {
   if (!userId) {
     return NextResponse.json({ message: 'User not found' })
   }
-
-  const clerkResponse = await clerkClient.users.getUserOauthAccessToken(
+  const client = await clerkClient();
+  const clerkResponse = await client.users.getUserOauthAccessToken(
     userId,
     'oauth_google'
   )
 
-  const accessToken = clerkResponse[0].token
+  const accessToken = clerkResponse.data[0].token
   oauth2Client.setCredentials({
     access_token: accessToken,
   })
@@ -47,7 +47,7 @@ export async function GET() {
       id: channelId,
       type: 'web_hook',
       address:
-        `${process.env.NGROK_URI}/api/drive-activity/notification`,
+      `${process.env.NGROK_URI}/api/drive-activity/notification`,
       kind: 'api#channel',
     },
   })
