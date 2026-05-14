@@ -4,8 +4,8 @@ import WorkflowButton from "./_components/workflow-button";
 import Workflows from "./_components";
 
 
-
-const Page = () => {
+type Props = {}
+const Page = (props:Props) => {
   return (
     <div className="flex flex-col gap-4 relative">
       <h1
@@ -16,7 +16,9 @@ const Page = () => {
         Workflows
         <WorkflowButton />
       </h1>
-      <Workflows />
+     <div className="flex flex-col gap-4 my-1 relative">
+       <Workflows />
+     </div>
       
       
     </div>

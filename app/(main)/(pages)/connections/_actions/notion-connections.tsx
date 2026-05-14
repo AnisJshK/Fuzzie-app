@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { currentUser } from '@clerk/nextjs/server'
+import { currentUser, auth } from '@clerk/nextjs/server'
 import { Client } from '@notionhq/client'
 
 export const onNotionConnect = async (
@@ -12,9 +12,7 @@ export const onNotionConnect = async (
   database_id: string,
   id: string
 ) => {
-  'use server'
   if (access_token) {
-    //check if notion is connected
     const notion_connected = await db.notion.findFirst({
       where: {
         accessToken: access_token,
@@ -29,7 +27,6 @@ export const onNotionConnect = async (
     })
 
     if (!notion_connected) {
-      //create connection
       await db.notion.create({
         data: {
           userId: id,
@@ -49,6 +46,7 @@ export const onNotionConnect = async (
     }
   }
 }
+
 export const getNotionConnection = async () => {
   const user = await currentUser()
   if (user) {
@@ -83,23 +81,44 @@ export const onCreateNewPageInDatabase = async (
     auth: accessToken,
   })
 
-  console.log(databaseId)
   const response = await notion.pages.create({
     parent: {
       type: 'database_id',
       database_id: databaseId,
     },
     properties: {
-      name: [
-        {
-          text: {
-            content: content,
+      Name: {
+        title: [
+          {
+            text: {
+              content: content,
+            },
           },
-        },
-      ],
+        ],
+      },
     },
   })
+
   if (response) {
     return response
   }
+}
+
+// ✅ New helper — fetches the stored Notion connection for the current user
+export const getNotionConnectionForCurrentUser = async () => {
+  const { userId } = await auth()
+
+  if (!userId) {
+    throw new Error('User not authenticated')
+  }
+
+  const notionConnection = await db.notion.findFirst({
+    where: { userId },
+  })
+
+  if (!notionConnection) {
+    throw new Error('Notion connection not found for this user')
+  }
+
+  return notionConnection
 }

@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/api/clerk-webhook',
   '/api/drive-activity/notification',
+  '/api/payment/success',
 ])
 
 const isIgnoredRoute = createRouteMatcher([
